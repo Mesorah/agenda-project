@@ -1,0 +1,56 @@
+/* 
+#F9CFF2 mimi pink
+#D741A7 hollywood cerise
+#5398BE celestial blue
+#247BA0 cerulean
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #247BA0;
+}
+
+header {
+    text-align: center;
+    background: #1D1E2C;
+    color: #fff;
+    padding: 25px;
+    margin-bottom: 45px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #2fafe681;
+    border-radius: 10px;
+}
+  
+td, th {
+    text-align: left;
+    padding: 8px;
+    border-style: none;
+    padding: 10px;
+}
+  
+tr:nth-child(even) {
+    background-color: #6eadc4;
+}
+
+tr:hover {
+    background-color: #5398BE;
+}
+
+.background-table {
+    background: #CAE9FF;
+    padding: 20px;
+    border-radius: 10px;
+    width: 88%;
+    margin: auto;
+}
