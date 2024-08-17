@@ -13,7 +13,7 @@ class Contact(models.Model):
     last_name = models.CharField(max_length=55)
     phone = models.CharField(max_length=50)
     email = models.EmailField()
-    date_created = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True)
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True)

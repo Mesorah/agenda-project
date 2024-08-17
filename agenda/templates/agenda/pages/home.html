@@ -19,9 +19,13 @@
                 <td>{{ contact.last_name }}</td>
                 <td>{{ contact.phone }}</td>
                 <td>{{ contact.email }}</td>
-                <td><form action="{% url "agenda:remove_contact" contact.id %}" method="post">
+                <td><form action="{% url "agenda:update_contact" contact.id %}" method="POST">
                     {% csrf_token %}
-                    <input type="submit" value="remove">
+                    <input type="submit" value="update" class="button-home">
+                </form></td>
+                <td><form action="{% url "agenda:remove_contact" contact.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="remove" class="button-home">
                 </form></td>
             </tr>
         {% endfor %}

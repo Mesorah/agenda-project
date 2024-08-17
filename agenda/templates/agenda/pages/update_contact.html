@@ -1,17 +1,17 @@
 {% extends "global/base.html" %}
 
-{% block title %}Add contact{% endblock title %}
+{% block title %}Update contact{% endblock title %}
 
 {% block content %}
     <div class="contact-background">
-        <div class="add_contact-profile">
+        <div class="update_contact-profile">
             <h2>Profile</h2>
         </div>
-        <form action="{% url 'agenda:add_contact' %}" method="POST" enctype='multipart/form-data'>
+        <form action="{% url 'agenda:update_contact' contact.id %}" method="POST" enctype='multipart/form-data'>
             {% csrf_token %}
-            <div class="add_contact-forms">
+            <div class="update_contact-forms">
                 {% for field in form %}
-                    <div class="field-add-contact-form">
+                    <div class="field-update-contact-form">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
                         {{ field }}
                         {% if field.help_text %}
@@ -20,12 +20,12 @@
                     </div>
                 {% endfor %}
             </div>
-
+        
             {% if form.errors %}
                 {{ form.errors }}
             {% endif %}
-
-            <button type="submit" class="add_contact-button">Send</button>
+        
+            <button type="submit" class="update_contact-button">Send</button>
         </form>
     </div>
 {% endblock content %}

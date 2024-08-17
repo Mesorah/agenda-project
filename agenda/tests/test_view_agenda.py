@@ -1,6 +1,7 @@
 from agenda.tests.test_model_agenda import CreateModel
-from agenda.models import Contact
+from agenda.models import Contact, Category
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class TestViewAgenda(CreateModel):
@@ -14,13 +15,13 @@ class TestViewAgenda(CreateModel):
         self.contact2 = self.create_contact(phone='299884734', email='gabrielcambara125@gmail.com') # noqa E501
         self.contact3 = self.create_contact(phone='399884734', email='gabrielcambara126@gmail.com') # noqa E501
 
-        antes = list(Contact.objects.all())
+        before = list(Contact.objects.all())
 
         self.contact1.delete()
 
-        depois = list(Contact.objects.all())
+        after = list(Contact.objects.all())
 
-        self.assertNotEqual(antes, depois)
+        self.assertNotEqual(before, after)
 
     def test_remove_contact(self):
         url = reverse('agenda:remove_contact', kwargs={'id': self.contact.id})
@@ -29,3 +30,55 @@ class TestViewAgenda(CreateModel):
         self.assertEqual(Contact.objects.count(), 0)
 
         self.assertRedirects(response, reverse('agenda:home'))
+
+    def test_if_request_in_add_contact_is_post(self):
+        User.objects.create_user(username='test', password='12345')
+        self.client.login(username='test', password='12345')
+        category = Category.objects.create(name='Fried')
+
+        form_data = {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'phone': '123456789',
+            'email': 'john.doe@example.com',
+            'description': 'A test contact',
+            'category': category.id,
+            'cover': ''
+        }
+
+        response = self.client.post(
+            reverse('agenda:add_contact'), data=form_data)
+        self.assertEqual(response.status_code, 302)
+
+        form_data = {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'phone': '123456789',
+            'email': 'john.doe@example.com',
+            'description': 'A test contact',
+            'category': 'IDK',
+            'cover': ''
+        }
+
+        response = self.client.post(
+            reverse('agenda:add_contact'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_if_request_in_add_contact_is_get(self):
+        User.objects.create_user(username='test', password='12345')
+        self.client.login(username='test', password='12345')
+        Category.objects.create(name='Fried')
+
+        form_data = {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'phone': '123456789',
+            'email': 'john.doe@example.com',
+            'description': 'A test contact',
+            'category': 'IDK',
+            'cover': ''
+        }
+
+        response = self.client.post(
+            reverse('agenda:add_contact'), data=form_data)
+        self.assertEqual(response.status_code, 200)

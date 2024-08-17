@@ -16,15 +16,14 @@
                 <p><strong>Description: </strong>{{ contact.description }}</p>
             {% endif %}
 
-            {% if Category is not None %}
+            {% if contact.category != None %}
                 <p><strong>Category: </strong>{{ contact.category }}</p>
             {% else %}
                 <p><strong>Category: </strong>Unknow</p>
             {% endif %}
-
             {% if contact.cover %}
-                <div class="view_contact-recipe-cover">
-                    <img src="{{ contact.cover.url }}" alt="image">
+                <div>
+                    <img src="{{ contact.cover.url }}" alt="image" class="view_contact-recipe-cover-img">
                 </div>
             {% endif %}
         </div>
