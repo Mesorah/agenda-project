@@ -1,3 +1,9 @@
 <div class="header">
     <h1><a href="{% url 'agenda:home' %}" class="header-a">Agenda</a></h1>
+    <div>
+        <form action="{% url 'agenda:search' %}" method="GET" class="search-form">
+            <input type="search" name="q" id="search" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </div>

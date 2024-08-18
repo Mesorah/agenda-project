@@ -4,28 +4,44 @@
 
 {% block content %}
     <div class="contact-background">
-        <div class="update_contact-profile">
+        <div class="contact-profile">
             <h2>Profile</h2>
         </div>
         <form action="{% url 'agenda:update_contact' contact.id %}" method="POST" enctype='multipart/form-data'>
             {% csrf_token %}
-            <div class="update_contact-forms">
+            <div class="contact-forms">
                 {% for field in form %}
-                    <div class="field-update-contact-form">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
-                        {{ field }}
+                    <div class="field-contact-form">
+                        {% if field.name == 'cover' %}
+                             {% if field.value %}
+                                <div class="currently-container">
+                                    <span>Currently:</span> 
+                                    <a href="{{ field.value.url }}" class="currently-image">{{ field.value.name }}</a>
+                                </div><br>
+
+                                <div class="clear-container">
+                                    <label for="{{ field.name }}-clear_id">Clear:</label>
+                                    <input type="checkbox" name="{{ field.name }}-clear" id="{{ field.name }}-clear_id" class="checkbox-large">
+                                </div><br>
+                             {% endif %}
+                        {% else %}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+                            {{ field }}
+                        {% endif %}
                         {% if field.help_text %}
                             <p class="help-text">{{ field.help_text }}</p>
                         {% endif %}
                     </div>
                 {% endfor %}
-            </div>
+                Change:
+                    <input type="file" name="cover" accept="image/*" id="id_cover">
+            </div><br>
         
             {% if form.errors %}
                 {{ form.errors }}
             {% endif %}
         
-            <button type="submit" class="update_contact-button">Send</button>
+            <br><button type="submit" class="add_contact-button">Send</button>
         </form>
     </div>
 {% endblock content %}

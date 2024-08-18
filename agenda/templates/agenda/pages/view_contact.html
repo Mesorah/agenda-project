@@ -26,6 +26,8 @@
                     <img src="{{ contact.cover.url }}" alt="image" class="view_contact-recipe-cover-img">
                 </div>
             {% endif %}
+            <br><br><a href="{% url 'agenda:update_contact' contact.id %}" class="button-home">Update</a>
+            <a href="{% url 'agenda:remove_contact' contact.id %}" class="button-home">Remove</a>
         </div>
     {% endfor %}
 </div>

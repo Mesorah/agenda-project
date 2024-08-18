@@ -4,14 +4,14 @@
 
 {% block content %}
     <div class="contact-background">
-        <div class="add_contact-profile">
+        <div class="contact-profile">
             <h2>Profile</h2>
         </div>
         <form action="{% url 'agenda:add_contact' %}" method="POST" enctype='multipart/form-data'>
             {% csrf_token %}
-            <div class="add_contact-forms">
+            <div class="contact-forms">
                 {% for field in form %}
-                    <div class="field-add-contact-form">
+                    <div class="field-contact-form">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
                         {{ field }}
                         {% if field.help_text %}

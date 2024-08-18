@@ -68,6 +68,7 @@ class TestViewAgenda(CreateModel):
         User.objects.create_user(username='test', password='12345')
         self.client.login(username='test', password='12345')
         Category.objects.create(name='Fried')
+        Contact.objects.get(id=1)
 
         form_data = {
             'first_name': 'John',
@@ -81,4 +82,66 @@ class TestViewAgenda(CreateModel):
 
         response = self.client.post(
             reverse('agenda:add_contact'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_if_request_in_update_contact_is_post(self):
+        User.objects.create_user(username='test', password='12345')
+        self.client.login(username='test', password='12345')
+
+        contact = Contact.objects.create(
+            first_name='John',
+            last_name='Doe',
+            phone='123456789',
+            email='john.doe@example.com',
+            description='A test contact',
+            cover=''
+        )
+
+        url = reverse('agenda:update_contact', kwargs={'id': contact.id})
+
+        response = self.client.post(url, {
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'phone': '987654321',
+            'email': 'jane.doe@example.com',
+            'description': 'Updated contact',
+            'cover': ''
+        })
+
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.post(url, {
+            'last_name': 'Doe',
+            'phone': '987654321',
+            'email': 'jane.doe@example.com',
+            'description': 'Updated contact',
+            'cover': ''
+        })
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_if_request_in_update_contact_is_get(self):
+        User.objects.create_user(username='test', password='12345')
+        self.client.login(username='test', password='12345')
+
+        contact = Contact.objects.create(
+            first_name='John',
+            last_name='Doe',
+            phone='123456789',
+            email='john.doe@example.com',
+            description='A test contact',
+            cover=''
+        )
+
+        url = reverse('agenda:update_contact', kwargs={'id': contact.id})
+
+        response = self.client.get(url, {
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'phone': '987654321',
+            'email': 'jane.doe@example.com',
+            'description': 'Updated contact',
+            'cover': ''
+        })
+
         self.assertEqual(response.status_code, 200)

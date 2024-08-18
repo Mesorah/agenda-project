@@ -1,13 +1,22 @@
 from django.shortcuts import render, redirect
 from agenda.models import Contact
 from agenda.form import ContactForm
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 def home(request):
-    contact = Contact.objects.all()
+    contact = Contact.objects.all().order_by('-id')
+    paginator = Paginator(contact, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # testar search
 
     return render(request, 'agenda/pages/home.html', context={
-        'contacts': contact
+        'contacts': contact,
+        'page_obj': page_obj,
+        'var_for': page_obj
     })
 
 
@@ -34,8 +43,6 @@ def remove_contact(request, id):
 
 def update_contact(request, id):
     contact = Contact.objects.get(id=id)
-    print('contact', contact)
-    print(contact.phone)
 
     if request.method == 'POST':
         form = ContactForm(request.POST, request.FILES, instance=contact)
@@ -44,7 +51,6 @@ def update_contact(request, id):
             return redirect('agenda:home')
     else:
         form = ContactForm(instance=contact)
-        # tentar fazer com que o update form ja venha preenchido
 
     return render(request, 'agenda/pages/update_contact.html', context={
         'form': form,
@@ -57,4 +63,23 @@ def view_contact(request, id):
 
     return render(request, 'agenda/pages/view_contact.html', context={
         'contacts': contact
+    })
+
+
+def search(request):
+    search_term = request.GET.get('q', '').strip()
+
+    contact = Contact.objects.filter(
+        Q(first_name__icontains=search_term)
+    ).order_by('-id')
+
+    paginator = Paginator(contact, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'agenda/pages/home.html', context={
+        'contacts': contact,
+        'search_term': search_term,
+        'var_for': contact,
+        'page_obj': page_obj
     })

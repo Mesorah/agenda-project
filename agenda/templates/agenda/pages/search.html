@@ -15,7 +15,7 @@
             <th>Phone</th>
             <th>Email</th>
         </tr>
-        {% for contact in var_for %}
+        {% for contact in contacts %}
             <tr>
                 <td><a href="{% url 'agenda:view_contact' contact.id %}" class="td-a-contact">{{ contact.id }}</a></td>
                 <td>{{ contact.first_name }}</td>

@@ -5,14 +5,14 @@
 }
 
 body {
-    background: #247BA0;
+    background: rgb(230, 230, 245);
     font-family: Arial, sans-serif;
 }
 
 /* Cabeçalho */
 header {
     text-align: center;
-    background: #1D1E2C;
+    background: rgb(0, 0, 30);
     color: #fff;
     padding: 24.7px;
     margin-bottom: 25px;
@@ -23,28 +23,33 @@ header {
     color: #fff;
 }
 
+.contacts {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
 /* Tabelas */
 table {
     font-family: Arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
     margin: auto;
-    background: #2fafe681;
     border-radius: 10px;
     margin-bottom: 8px;
 }
 
 td, th {
     text-align: left;
-    padding: 10px;
+    padding: 17px;
+    font-size: 1.1em;
 }
 
 tr:nth-child(even) {
-    background-color: #6eadc4;
+    background-color: rgba(0, 0, 10, 5%);
 }
 
 tr:hover {
-    background-color: #5398BE;
+    background-color: rgba(0, 0, 10, 10%);
 }
 
 .td-a-contact {
@@ -54,34 +59,40 @@ tr:hover {
 
 /* Formulário de Contato */
 .contact-background {
-    background: #CAE9FF;
+    background: rgb(245, 245, 255);
     padding: 20px;
     border-radius: 10px;
     width: 80%;
     margin: auto;
 }
 
-.add_contact-profile {
+.contact-profile {
     text-align: center;
     margin-bottom: 30px;
 }
 
-.add_contact-forms {
+.contact-forms {
     font-size: 1.3em;
 }
 
-.field-add-contact-form {
+.field-contact-form {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.field-add-contact-form label {
+.field-contact-form label {
+    /* margin-top: -26px; */
     display: block;
 }
 
-.field-add-contact-form input {
+.currently-image {
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+.field-contact-form input {
     width: 100%;
     height: 30px;
     font-size: 1em;
@@ -89,7 +100,37 @@ tr:hover {
     border-radius: 5px;
 }
 
-.field-add-contact-form .help-text {
+.currently-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.currently-container a {
+    overflow-wrap: break-word;
+    word-break: break-all;
+    margin-left: 5px;
+}
+
+.clear-container {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.clear-container input {
+    margin-left: 12px;
+}
+
+.checkbox-large {
+    transform: scale(1.5);/
+}
+
+.checkbox-large + label {
+    margin-left: 5px;
+}
+
+.field-contact-form .help-text {
     font-size: 0.9em;
     color: #666;
 }
@@ -114,8 +155,8 @@ tr:hover {
     background-color: #df8dd1;
 }
 
-.field-add-contact-form .help-text,
-.field-add-contact-form .field-errors {
+.field-contact-form .help-text,
+.field-contact-form .field-errors {
     font-size: 0.9em;
     color: #666;
     margin-top: 5px;
@@ -141,6 +182,7 @@ tr:hover {
     font-size: 1.1em;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .button-home:hover {
