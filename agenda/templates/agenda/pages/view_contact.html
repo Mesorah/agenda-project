@@ -4,6 +4,15 @@
 
 {% block content %}
 <div class="contact-background">
+    <div>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
     {% for contact in contacts %}
         <div class="view_contact-contacts">
             <h2>{{ contact.first_name }} {{ contact.last_name }}</h2><br>

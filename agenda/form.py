@@ -1,5 +1,5 @@
 from django import forms
-from agenda.models import Contact
+from agenda.models import Contact, Category
 
 
 class ContactForm(forms.ModelForm):
@@ -38,3 +38,25 @@ class ContactForm(forms.ModelForm):
             self.add_error('email', 'This email already exists')
 
         return email
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+
+
+class RemoveCategoryForm(forms.Form):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(), label='Select Category to Remove')
+
+
+class UpdateCategoryForm(forms.Form):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(), label='Select Category to Remove')
+
+    new_name = forms.CharField(
+        max_length=55,
+        required=True,
+        label='New name for category'
+    )

@@ -1,9 +1,16 @@
 {% extends "global/base.html" %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
 <div class="contact-background">
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     <div class="contacts">
         <h2>Contacts</h2>
     </div>
@@ -23,12 +30,14 @@
                 <td>{{ contact.phone }}</td>
                 <td>{{ contact.email }}</td>
             </tr>
+            {% empty %}
+                <p>Search not found</p>
         {% endfor %}
     </table>
     <div >
         <form action="{% url "agenda:add_contact" %}" method="post">
             {% csrf_token %}
-            <br><button type="submit" class="add_contact-button">Add</button>
+            <br><button type="submit" class="contact-button">Add</button>
         </form>
     </div>
 

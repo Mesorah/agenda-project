@@ -4,33 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 
-class TestViewAgenda(CreateModel):
-    def setUp(self) -> None:
-        self.contact = self.create_contact(phone='199884734', email='gabrielcambara124@gmail.com') # noqa E501
-
-        return super().setUp()
-
-    def test_if_contact_is_deleted(self):
-        self.contact1 = self.create_contact(phone='199884734', email='gabrielcambara124@gmail.com') # noqa E501
-        self.contact2 = self.create_contact(phone='299884734', email='gabrielcambara125@gmail.com') # noqa E501
-        self.contact3 = self.create_contact(phone='399884734', email='gabrielcambara126@gmail.com') # noqa E501
-
-        before = list(Contact.objects.all())
-
-        self.contact1.delete()
-
-        after = list(Contact.objects.all())
-
-        self.assertNotEqual(before, after)
-
-    def test_remove_contact(self):
-        url = reverse('agenda:remove_contact', kwargs={'id': self.contact.id})
-        response = self.client.get(url)
-
-        self.assertEqual(Contact.objects.count(), 0)
-
-        self.assertRedirects(response, reverse('agenda:home'))
-
+class TestAddContact(CreateModel):
     def test_if_request_in_add_contact_is_post(self):
         User.objects.create_user(username='test', password='12345')
         self.client.login(username='test', password='12345')
@@ -65,6 +39,7 @@ class TestViewAgenda(CreateModel):
         self.assertEqual(response.status_code, 200)
 
     def test_if_request_in_add_contact_is_get(self):
+        self.contact = self.create_contact(phone='199884734', email='gabrielcambara124@gmail.com') # noqa E501
         User.objects.create_user(username='test', password='12345')
         self.client.login(username='test', password='12345')
         Category.objects.create(name='Fried')
@@ -84,6 +59,32 @@ class TestViewAgenda(CreateModel):
             reverse('agenda:add_contact'), data=form_data)
         self.assertEqual(response.status_code, 200)
 
+
+class TestRemoveContact(CreateModel):
+    def test_if_contact_is_deleted(self):
+        self.contact1 = self.create_contact(phone='199884734', email='gabrielcambara124@gmail.com') # noqa E501
+        self.contact2 = self.create_contact(phone='299884734', email='gabrielcambara125@gmail.com') # noqa E501
+        self.contact3 = self.create_contact(phone='399884734', email='gabrielcambara126@gmail.com') # noqa E501
+
+        before = list(Contact.objects.all())
+
+        self.contact1.delete()
+
+        after = list(Contact.objects.all())
+
+        self.assertNotEqual(before, after)
+
+    def test_remove_contact(self):
+        self.contact = self.create_contact(phone='199884734', email='gabrielcambara124@gmail.com') # noqa E501
+        url = reverse('agenda:remove_contact', kwargs={'id': self.contact.id})
+        response = self.client.get(url)
+
+        self.assertEqual(Contact.objects.count(), 0)
+
+        self.assertRedirects(response, reverse('agenda:home'))
+
+
+class TestUpdateContact(CreateModel):
     def test_if_request_in_update_contact_is_post(self):
         User.objects.create_user(username='test', password='12345')
         self.client.login(username='test', password='12345')
