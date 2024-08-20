@@ -31,7 +31,9 @@
                 <td>{{ contact.email }}</td>
             </tr>
             {% empty %}
-                <p>Search not found</p>
+                {% if title == 'Search' %}
+                    <p>Search not found</p>
+                {% endif %}
         {% endfor %}
     </table>
     <div >

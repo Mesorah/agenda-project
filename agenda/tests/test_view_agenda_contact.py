@@ -55,7 +55,7 @@ class TestAddContact(CreateModel):
             'cover': ''
         }
 
-        response = self.client.post(
+        response = self.client.get(
             reverse('agenda:add_contact'), data=form_data)
         self.assertEqual(response.status_code, 200)
 

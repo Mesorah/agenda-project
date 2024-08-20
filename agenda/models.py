@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -19,6 +20,8 @@ class Contact(models.Model):
         Category, on_delete=models.SET_NULL, blank=True, null=True)
     cover = models.ImageField(
         upload_to='contact/covers/%Y/%m/%d/', blank=True, default='')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

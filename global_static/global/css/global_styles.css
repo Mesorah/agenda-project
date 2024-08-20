@@ -14,6 +14,7 @@ header {
     color: #fff;
     padding: 24.7px;
     margin-bottom: 25px;
+    position: relative; /* Adicione esta linha */
 }
 
 .header-a {
@@ -49,6 +50,7 @@ table {
     margin: auto;
     border-radius: 10px;
     margin-bottom: 8px;
+    overflow-x: auto;
 }
 
 td, th {
@@ -134,7 +136,7 @@ tr:hover {
 }
 
 .checkbox-large {
-    transform: scale(1.5);/
+    transform: scale(1.5);
 }
 
 .checkbox-large + label {
@@ -161,6 +163,7 @@ tr:hover {
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
+    margin: 5px 0 25px;
 }
 
 .contact-button:hover {
@@ -201,6 +204,29 @@ tr:hover {
     background-color: #df8dd1;
 }
 
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.register_login_author {
+    margin-top: 25px;
+}
+
+.logout {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin: 20px;
+}
+
+.logout a {
+    text-decoration: none;
+    color: #fff;
+}
+
 .messages {
     list-style-type: none;
     margin: 20px 0;
@@ -239,4 +265,60 @@ tr:hover {
     background-color: #e2e3e5;
     color: #383d41;
     border-left: 5px solid #6c757d;
+}
+
+
+@media (max-width: 768px) {
+    .contact-background {
+        padding: 15px;
+        width: 95%;
+    }
+
+    .contact-forms {
+        font-size: 1em;
+    }
+
+    .field-contact-form {
+        width: 100%;
+        font-size: 1em;
+    }
+
+    .contact-button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    table {
+        font-size: 0.9em;
+        overflow-x: auto;
+    }
+
+    td, th {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-background {
+        padding: 10px;
+        width: 100%;
+    }
+
+    .contact-forms {
+        font-size: 0.9em;
+    }
+
+    .field-contact-form {
+        font-size: 0.9em;
+    }
+
+    .contact-button {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    table, td, th {
+        font-size: 0.8em;
+    }
 }

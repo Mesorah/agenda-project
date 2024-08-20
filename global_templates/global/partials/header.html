@@ -6,4 +6,10 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+
+    {% if user.is_authenticated %}
+        <div class="logout button-home">
+            <a href="{% url 'authors:logout_author' %}">Logout</a>
+        </div>
+    {% endif %}
 </div>

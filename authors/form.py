@@ -47,12 +47,10 @@ class RegisterForm(forms.ModelForm):
     def clean_password(self):
         password = self.cleaned_data.get('password')
 
-        if password:
-            try:
-                password_policy.test(password)
-            except Exception as e:
-                print('sale')
-                self.add_error('password', str(e))
+        errors = password_policy.test(password)
+        if errors:
+            error_messages = [str(error) for error in errors]
+            self.add_error('password', ' '.join(error_messages))
 
         return password
 
@@ -63,5 +61,23 @@ class RegisterForm(forms.ModelForm):
 
         if password != confirm_password:
             self.add_error('password', 'Passwords need to be the same')
+
+        return cleaned_data
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+
+        if not username or not password:
+            if not username:
+                self.add_error('username', 'Username is required.')
+            if not password:
+                self.add_error('password', 'Password is required.')
 
         return cleaned_data

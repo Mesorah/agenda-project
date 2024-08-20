@@ -43,5 +43,15 @@
                 <a href="{% url 'agenda:update_category' %}" class="contact-button">Update a Category</a>
             {% endif %}
         </form>
+
+        <div class="register_login_author">
+            {% if dont_have_account %}
+                <a href="{% url 'authors:register_author' %}">Don't have an account? Click here!</a>
+            {% endif %}
+
+            {% if have_account %}
+                <a href="{% url 'authors:login_author' %}">Have an account? Click here!</a>
+            {% endif %}
+        </div>
     </div>
 {% endblock content %}

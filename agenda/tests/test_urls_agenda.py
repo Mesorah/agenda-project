@@ -5,6 +5,29 @@ from agenda.tests.test_model_agenda import CreateModel
 
 
 class TestHomeUrlsAgenda(TestCase):
+    def setUp(self) -> None:
+        self.form_data = {
+            'username': 'JohnDoe',
+            'first_name': 'Johny',
+            'last_name': 'Doeny',
+            'email': 'john.doe@example.com',
+            'password': '!@33dfDFG!2d',
+            'confirm_password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:register_author'), data=self.form_data)
+        self.assertEqual(response.status_code, 302)
+
+        self.login_data = {
+            'username': 'JohnDoe',
+            'password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:login_author'), data=self.login_data)
+        self.assertEqual(response.status_code, 302)
+
+        return super().setUp()
+
     def test_home_url_return_status_code_200(self):
         url = self.client.get(reverse('agenda:home'))
         self.assertEqual(url.status_code, 200)
@@ -22,9 +45,12 @@ class TestHomeUrlsAgenda(TestCase):
         self.assertIs(url.func, views.home)
 
 
-class TestViewContactUrlsAgenda(TestCase):
+# Arrumar todos os tests
+
+class TestViewContactUrlsAgenda(CreateModel):
     def test_view_contact_url_return_status_code_200(self):
-        url = self.client.get(reverse('agenda:view_contact', kwargs={'id': 1}))
+        contact = self.create_contact()
+        url = self.client.get(reverse('agenda:view_contact', kwargs={'id': contact.id}))
         self.assertEqual(url.status_code, 200)
 
     def test_view_contact_url_load_correct_template(self):
@@ -43,6 +69,29 @@ class TestViewContactUrlsAgenda(TestCase):
 
 
 class TestAddContactUrlsAgenda(TestCase):
+    def setUp(self) -> None:
+        self.form_data = {
+            'username': 'JohnDoe',
+            'first_name': 'Johny',
+            'last_name': 'Doeny',
+            'email': 'john.doe@example.com',
+            'password': '!@33dfDFG!2d',
+            'confirm_password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:register_author'), data=self.form_data)
+        self.assertEqual(response.status_code, 302)
+
+        self.login_data = {
+            'username': 'JohnDoe',
+            'password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:login_author'), data=self.login_data)
+        self.assertEqual(response.status_code, 302)
+
+        return super().setUp()
+
     def test_add_url_return_status_code_200(self):
         url = self.client.get(reverse('agenda:add_contact'))
         self.assertEqual(url.status_code, 200)
@@ -62,6 +111,29 @@ class TestAddContactUrlsAgenda(TestCase):
 
 
 class TestUpdateContactUrlsAgenda(TestCase):
+    def setUp(self) -> None:
+        self.form_data = {
+            'username': 'JohnDoe',
+            'first_name': 'Johny',
+            'last_name': 'Doeny',
+            'email': 'john.doe@example.com',
+            'password': '!@33dfDFG!2d',
+            'confirm_password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:register_author'), data=self.form_data)
+        self.assertEqual(response.status_code, 302)
+
+        self.login_data = {
+            'username': 'JohnDoe',
+            'password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:login_author'), data=self.login_data)
+        self.assertEqual(response.status_code, 302)
+
+        return super().setUp()
+
     def test_update_url_return_status_code_200(self):
         CreateModel().create_contact()
         url = self.client.get(
@@ -88,6 +160,29 @@ class TestUpdateContactUrlsAgenda(TestCase):
 
 
 class TestAddCategoryUrlsAgenda(TestCase):
+    def setUp(self) -> None:
+        self.form_data = {
+            'username': 'JohnDoe',
+            'first_name': 'Johny',
+            'last_name': 'Doeny',
+            'email': 'john.doe@example.com',
+            'password': '!@33dfDFG!2d',
+            'confirm_password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:register_author'), data=self.form_data)
+        self.assertEqual(response.status_code, 302)
+
+        self.login_data = {
+            'username': 'JohnDoe',
+            'password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:login_author'), data=self.login_data)
+        self.assertEqual(response.status_code, 302)
+
+        return super().setUp()
+
     def test_add_category_url_return_status_code_200(self):
         url = self.client.get(reverse('agenda:add_category'))
         self.assertEqual(url.status_code, 200)
@@ -107,6 +202,29 @@ class TestAddCategoryUrlsAgenda(TestCase):
 
 
 class TestRemoveCategoryUrlsAgenda(TestCase):
+    def setUp(self) -> None:
+        self.form_data = {
+            'username': 'JohnDoe',
+            'first_name': 'Johny',
+            'last_name': 'Doeny',
+            'email': 'john.doe@example.com',
+            'password': '!@33dfDFG!2d',
+            'confirm_password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:register_author'), data=self.form_data)
+        self.assertEqual(response.status_code, 302)
+
+        self.login_data = {
+            'username': 'JohnDoe',
+            'password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:login_author'), data=self.login_data)
+        self.assertEqual(response.status_code, 302)
+
+        return super().setUp()
+
     def test_remove_category_url_return_status_code_200(self):
         url = self.client.get(reverse('agenda:remove_category'))
         self.assertEqual(url.status_code, 200)
@@ -126,6 +244,29 @@ class TestRemoveCategoryUrlsAgenda(TestCase):
 
 
 class TestUpdateCategoryUrlsAgenda(TestCase):
+    def setUp(self) -> None:
+        self.form_data = {
+            'username': 'JohnDoe',
+            'first_name': 'Johny',
+            'last_name': 'Doeny',
+            'email': 'john.doe@example.com',
+            'password': '!@33dfDFG!2d',
+            'confirm_password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:register_author'), data=self.form_data)
+        self.assertEqual(response.status_code, 302)
+
+        self.login_data = {
+            'username': 'JohnDoe',
+            'password': '!@33dfDFG!2d',
+        }
+        response = self.client.post(
+            reverse('authors:login_author'), data=self.login_data)
+        self.assertEqual(response.status_code, 302)
+
+        return super().setUp()
+
     def test_update_category_url_return_status_code_200(self):
         url = self.client.get(reverse('agenda:update_category'))
         self.assertEqual(url.status_code, 200)
