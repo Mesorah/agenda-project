@@ -15,12 +15,16 @@ class ContactForm(forms.ModelForm):
             'cover',
         ]
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
         contact_id = self.instance.id
 
         phone_exists = Contact.objects.filter(
-            phone=phone).exclude(id=contact_id).exists()
+            phone=phone, user=self.user).exclude(id=contact_id).exists()
 
         if phone_exists:
             self.add_error('phone', 'This phone already exists')
@@ -32,7 +36,7 @@ class ContactForm(forms.ModelForm):
         contact_id = self.instance.id
 
         email_exists = Contact.objects.filter(
-            email=email).exclude(id=contact_id).exists()
+            email=email, user=self.user).exclude(id=contact_id).exists()
 
         if email_exists:
             self.add_error('email', 'This email already exists')
@@ -53,7 +57,7 @@ class RemoveCategoryForm(forms.Form):
 
 class UpdateCategoryForm(forms.Form):
     category = forms.ModelChoiceField(
-        queryset=Category.objects.all(), label='Select Category to Remove')
+        queryset=Category.objects.all(), label='Select Category to Update')
 
     new_name = forms.CharField(
         max_length=55,

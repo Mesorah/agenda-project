@@ -5,9 +5,17 @@ from django.contrib.auth.models import User
 
 
 class TestAddContact(CreateModel):
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
+
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
+
+        return super().setUp()
+
     def test_if_request_in_add_contact_is_post(self):
-        User.objects.create_user(username='test', password='12345')
-        self.client.login(username='test', password='12345')
         category = Category.objects.create(name='Fried')
 
         form_data = {
@@ -61,6 +69,16 @@ class TestAddContact(CreateModel):
 
 
 class TestRemoveContact(CreateModel):
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
+
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
+
+        return super().setUp()
+
     def test_if_contact_is_deleted(self):
         self.contact1 = self.create_contact(phone='199884734', email='gabrielcambara124@gmail.com') # noqa E501
         self.contact2 = self.create_contact(phone='299884734', email='gabrielcambara125@gmail.com') # noqa E501
@@ -85,20 +103,20 @@ class TestRemoveContact(CreateModel):
 
 
 class TestUpdateContact(CreateModel):
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
+
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
+
+        self.contact = self.create_contact()
+
+        return super().setUp()
+
     def test_if_request_in_update_contact_is_post(self):
-        User.objects.create_user(username='test', password='12345')
-        self.client.login(username='test', password='12345')
-
-        contact = Contact.objects.create(
-            first_name='John',
-            last_name='Doe',
-            phone='123456789',
-            email='john.doe@example.com',
-            description='A test contact',
-            cover=''
-        )
-
-        url = reverse('agenda:update_contact', kwargs={'id': contact.id})
+        url = reverse('agenda:update_contact', kwargs={'id': self.contact.id})
 
         response = self.client.post(url, {
             'first_name': 'Jane',
@@ -122,19 +140,7 @@ class TestUpdateContact(CreateModel):
         self.assertEqual(response.status_code, 200)
 
     def test_if_request_in_update_contact_is_get(self):
-        User.objects.create_user(username='test', password='12345')
-        self.client.login(username='test', password='12345')
-
-        contact = Contact.objects.create(
-            first_name='John',
-            last_name='Doe',
-            phone='123456789',
-            email='john.doe@example.com',
-            description='A test contact',
-            cover=''
-        )
-
-        url = reverse('agenda:update_contact', kwargs={'id': contact.id})
+        url = reverse('agenda:update_contact', kwargs={'id': self.contact.id})
 
         response = self.client.get(url, {
             'first_name': 'Jane',

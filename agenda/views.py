@@ -27,7 +27,7 @@ def home(request):
 @login_required(login_url='authors:login_author')
 def add_contact(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST, request.FILES)
+        form = ContactForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             contact = form.save(commit=False)
             contact.user = request.user
@@ -35,7 +35,7 @@ def add_contact(request):
             messages.success(request, 'Contact added successfully!')
             return redirect('agenda:home')
     else:
-        form = ContactForm()
+        form = ContactForm(user=request.user)
 
     url_action = reverse('agenda:add_contact')
 
@@ -71,6 +71,7 @@ def add_category(request):
 @login_required(login_url='authors:login_author')
 def remove_contact(request, id):
     contact = get_object_or_404(Contact, id=id, user=request.user)
+    # contact = Contact.objects.filter(id=id, user=request.user)
     contact.delete()
     messages.success(request, 'Contact successfully removed!')
     return redirect('agenda:home')
@@ -109,7 +110,7 @@ def update_contact(request, id):
             messages.success(request, 'Contact Successfully Changed!')
             return redirect('agenda:home')
     else:
-        form = ContactForm(instance=contact)
+        form = ContactForm(instance=contact, user=request.user)
 
     return render(request, 'agenda/pages/update_contact.html', context={
         'form': form,
@@ -144,10 +145,10 @@ def update_category(request):
 
 @login_required(login_url='authors:login_author')
 def view_contact(request, id):
-    contact = get_object_or_404(Contact, id=id, user=request.user)
+    contact = Contact.objects.filter(id=id, user=request.user)
 
     return render(request, 'agenda/pages/view_contact.html', context={
-        'contact': contact
+        'contacts': contact
     })
 
 

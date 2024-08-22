@@ -2,29 +2,17 @@ from django.test import TestCase
 from django.urls import reverse, resolve
 from agenda import views
 from agenda.tests.test_model_agenda import CreateModel
+from django.contrib.auth.models import User
 
 
 class TestHomeUrlsAgenda(TestCase):
     def setUp(self) -> None:
-        self.form_data = {
-            'username': 'JohnDoe',
-            'first_name': 'Johny',
-            'last_name': 'Doeny',
-            'email': 'john.doe@example.com',
-            'password': '!@33dfDFG!2d',
-            'confirm_password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:register_author'), data=self.form_data)
-        self.assertEqual(response.status_code, 302)
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
 
-        self.login_data = {
-            'username': 'JohnDoe',
-            'password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:login_author'), data=self.login_data)
-        self.assertEqual(response.status_code, 302)
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
 
         return super().setUp()
 
@@ -45,21 +33,32 @@ class TestHomeUrlsAgenda(TestCase):
         self.assertIs(url.func, views.home)
 
 
-# Arrumar todos os tests
-
 class TestViewContactUrlsAgenda(CreateModel):
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
+
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
+
+        self.contact = self.create_contact()
+
+        return super().setUp()
+
     def test_view_contact_url_return_status_code_200(self):
-        contact = self.create_contact()
-        url = self.client.get(reverse('agenda:view_contact', kwargs={'id': contact.id}))
+        url = self.client.post(reverse('agenda:view_contact',
+                                       kwargs={'id': self.contact.id}))
         self.assertEqual(url.status_code, 200)
 
     def test_view_contact_url_load_correct_template(self):
-        url = self.client.get(reverse('agenda:view_contact', kwargs={'id': 1}))
+        url = self.client.get(reverse('agenda:view_contact',
+                                      kwargs={'id': self.contact.id}))
         self.assertTemplateUsed(url, 'agenda/pages/view_contact.html')
 
     def test_view_contact_url_template_contain_certaly_word(self):
         url = self.client.get(
-            reverse('agenda:view_contact', kwargs={'id': 1})
+            reverse('agenda:view_contact', kwargs={'id': self.contact.id})
             ).content.decode('utf-8')
         self.assertIn('View contact', url)
 
@@ -70,25 +69,12 @@ class TestViewContactUrlsAgenda(CreateModel):
 
 class TestAddContactUrlsAgenda(TestCase):
     def setUp(self) -> None:
-        self.form_data = {
-            'username': 'JohnDoe',
-            'first_name': 'Johny',
-            'last_name': 'Doeny',
-            'email': 'john.doe@example.com',
-            'password': '!@33dfDFG!2d',
-            'confirm_password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:register_author'), data=self.form_data)
-        self.assertEqual(response.status_code, 302)
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
 
-        self.login_data = {
-            'username': 'JohnDoe',
-            'password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:login_author'), data=self.login_data)
-        self.assertEqual(response.status_code, 302)
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
 
         return super().setUp()
 
@@ -110,76 +96,63 @@ class TestAddContactUrlsAgenda(TestCase):
         self.assertIs(url.func, views.add_contact)
 
 
-class TestUpdateContactUrlsAgenda(TestCase):
+class TestUpdateContactUrlsAgenda(CreateModel):
     def setUp(self) -> None:
-        self.form_data = {
-            'username': 'JohnDoe',
-            'first_name': 'Johny',
-            'last_name': 'Doeny',
-            'email': 'john.doe@example.com',
-            'password': '!@33dfDFG!2d',
-            'confirm_password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:register_author'), data=self.form_data)
-        self.assertEqual(response.status_code, 302)
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
 
-        self.login_data = {
-            'username': 'JohnDoe',
-            'password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:login_author'), data=self.login_data)
-        self.assertEqual(response.status_code, 302)
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
+
+        self.contact = self.create_contact()
 
         return super().setUp()
 
     def test_update_url_return_status_code_200(self):
-        CreateModel().create_contact()
-        url = self.client.get(
-            reverse('agenda:update_contact', kwargs={'id': 1}))
-        self.assertEqual(url.status_code, 200)
+        response = self.client.post(
+            reverse('agenda:update_contact', kwargs={'id': self.contact.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_url_return_status_code_302(self):
+        response = self.client.post(
+            reverse('agenda:update_contact', kwargs={'id': self.contact.id}),
+            {
+                'first_name': 'Gabriel',
+                'last_name': 'Rodrigues',
+                'phone': '999884734',
+                'email': 'gabrielcambara123@gmail.com',
+                'description': 'Updated!',
+                'category': self.contact.category.id
+            }
+        )
+        self.assertEqual(response.status_code, 302)
 
     def test_update_url_load_correct_template(self):
-        CreateModel().create_contact()
         url = self.client.get(
-            reverse('agenda:update_contact', kwargs={'id': 1}))
+            reverse('agenda:update_contact', kwargs={'id': self.contact.id}))
         self.assertTemplateUsed(url, 'agenda/pages/update_contact.html')
 
     def test_update_url_template_contain_certaly_word(self):
-        CreateModel().create_contact()
         url = self.client.get(
             reverse('agenda:update_contact',
-                    kwargs={'id': 1})).content.decode('utf-8')
+                    kwargs={'id': self.contact.id})).content.decode('utf-8')
         self.assertIn('<h2>Profile</h2>', url)
 
     def test_update_url_load_correct_function(self):
-        CreateModel().create_contact()
-        url = resolve(reverse('agenda:update_contact', kwargs={'id': 1}))
+        url = resolve(reverse('agenda:update_contact',
+                              kwargs={'id': self.contact.id}))
         self.assertIs(url.func, views.update_contact)
 
 
 class TestAddCategoryUrlsAgenda(TestCase):
     def setUp(self) -> None:
-        self.form_data = {
-            'username': 'JohnDoe',
-            'first_name': 'Johny',
-            'last_name': 'Doeny',
-            'email': 'john.doe@example.com',
-            'password': '!@33dfDFG!2d',
-            'confirm_password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:register_author'), data=self.form_data)
-        self.assertEqual(response.status_code, 302)
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
 
-        self.login_data = {
-            'username': 'JohnDoe',
-            'password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:login_author'), data=self.login_data)
-        self.assertEqual(response.status_code, 302)
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
 
         return super().setUp()
 
@@ -203,25 +176,12 @@ class TestAddCategoryUrlsAgenda(TestCase):
 
 class TestRemoveCategoryUrlsAgenda(TestCase):
     def setUp(self) -> None:
-        self.form_data = {
-            'username': 'JohnDoe',
-            'first_name': 'Johny',
-            'last_name': 'Doeny',
-            'email': 'john.doe@example.com',
-            'password': '!@33dfDFG!2d',
-            'confirm_password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:register_author'), data=self.form_data)
-        self.assertEqual(response.status_code, 302)
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
 
-        self.login_data = {
-            'username': 'JohnDoe',
-            'password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:login_author'), data=self.login_data)
-        self.assertEqual(response.status_code, 302)
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
 
         return super().setUp()
 
@@ -245,25 +205,12 @@ class TestRemoveCategoryUrlsAgenda(TestCase):
 
 class TestUpdateCategoryUrlsAgenda(TestCase):
     def setUp(self) -> None:
-        self.form_data = {
-            'username': 'JohnDoe',
-            'first_name': 'Johny',
-            'last_name': 'Doeny',
-            'email': 'john.doe@example.com',
-            'password': '!@33dfDFG!2d',
-            'confirm_password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:register_author'), data=self.form_data)
-        self.assertEqual(response.status_code, 302)
+        self.user = User.objects.create_user(
+            username='Gabriel', password='ABcd12!@$5')
 
-        self.login_data = {
-            'username': 'JohnDoe',
-            'password': '!@33dfDFG!2d',
-        }
-        response = self.client.post(
-            reverse('authors:login_author'), data=self.login_data)
-        self.assertEqual(response.status_code, 302)
+        logged_in = self.client.login(
+            username='Gabriel', password='ABcd12!@$5')
+        self.assertTrue(logged_in, "Login falhou.")
 
         return super().setUp()
 

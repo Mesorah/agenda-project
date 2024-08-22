@@ -113,6 +113,11 @@ tr:hover {
     border-radius: 5px;
 }
 
+form select {
+    width: 25%;
+    height: 30px
+}
+
 .currently-container {
     display: flex;
     align-items: center;
