@@ -12,7 +12,10 @@ urlpatterns = [
          name='view_contact'
          ),
 
-    path('add_contact/', views.AddUpdateContact.as_view(), name='add_contact'),
+    path('add_contact/',
+         views.ContactCreateView.as_view(),
+         name='add_contact'
+         ),
     path('add_category/',
          views.AddCategoryView.as_view(),
          name='add_category'
@@ -27,8 +30,8 @@ urlpatterns = [
          name='remove_category'
          ),
 
-    path('update_contact/<int:id>/',
-         views.AddUpdateContact.as_view(),
+    path('update_contact/<int:pk>/',
+         views.ContactUpdateView.as_view(),
          name='update_contact'
          ),
     path('update_category/',
