@@ -6,16 +6,18 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class ContactCreateView(CreateView):
+class ContactViewSettingsMixin:
     template_name = 'global/pages/base_page.html'
     model = Contact
     form_class = ContactForm
     success_url = reverse_lazy('agenda:home')
 
+
+@method_decorator(
+    login_required(login_url='authors:login_author'),
+    name='dispatch'
+)
+class ContactCreateView(ContactViewSettingsMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
 
@@ -26,15 +28,14 @@ class ContactCreateView(CreateView):
     login_required(login_url='authors:login_author'),
     name='dispatch'
 )
-class ContactUpdateView(UpdateView):
-    template_name = 'global/pages/base_page.html'
-    model = Contact
-    form_class = ContactForm
-    success_url = reverse_lazy('agenda:home')
+class ContactUpdateView(ContactViewSettingsMixin, UpdateView):
+    pass
 
 
+@method_decorator(
+    login_required(login_url='authors:login_author'),
+    name='dispatch'
+)
 class ContactDeleteView(DeleteView):
-    template_name = 'global/pages/base_page.html'
     model = Contact
-    form_class = ContactForm
     success_url = reverse_lazy('agenda:home')
