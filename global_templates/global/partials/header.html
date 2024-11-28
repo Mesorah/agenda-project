@@ -9,7 +9,11 @@
 
     {% if user.is_authenticated %}
         <div class="logout button-home">
-            <a href="{% url 'authors:logout_author' %}">Logout</a>
+            <form action="{% url 'authors:logout_author' %}" method="POST">
+                {% csrf_token %}
+
+                <button type="submit">Logout</button>
+            </form>
         </div>
     {% endif %}
 </div>

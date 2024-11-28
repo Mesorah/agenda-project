@@ -13,31 +13,33 @@
             </ul>
         {% endif %}
     </div>
-    {% for contact in contacts %}
-        <div class="view_contact-contacts">
-            <h2>{{ contact.first_name }} {{ contact.last_name }}</h2><br>
-            <p><strong>ID: </strong>{{ contact.id }}</p>
-            <p><strong>Phone: </strong>{{ contact.phone }}</p>
-            <p><strong>Email: </strong>{{ contact.email }}</p>
-            <p><strong>Date created: </strong>{{ contact.date_created }}</p>
+    <div class="view_contact-contacts">
+        <h2>{{ contact.first_name }} {{ contact.last_name }}</h2><br>
+        <p><strong>ID: </strong>{{ contact.id }}</p>
+        <p><strong>Phone: </strong>{{ contact.phone }}</p>
+        <p><strong>Email: </strong>{{ contact.email }}</p>
+        <p><strong>Date created: </strong>{{ contact.date_created }}</p>
 
-            {% if contact.description %}
-                <p><strong>Description: </strong>{{ contact.description }}</p>
-            {% endif %}
+        {% if contact.description %}
+            <p><strong>Description: </strong>{{ contact.description }}</p>
+        {% endif %}
 
-            {% if contact.category != None %}
-                <p><strong>Category: </strong>{{ contact.category }}</p>
-            {% else %}
-                <p><strong>Category: </strong>Unknow</p>
-            {% endif %}
-            {% if contact.cover %}
-                <div>
-                    <img src="{{ contact.cover.url }}" alt="image" class="view_contact-recipe-cover-img">
-                </div>
-            {% endif %}
-            <br><br><a href="{% url 'agenda:update_contact' contact.id %}" class="button-home">Update</a>
-            <a href="{% url 'agenda:remove_contact' contact.id %}" class="button-home">Remove</a>
-        </div>
-    {% endfor %}
+        {% if contact.category != None %}
+            <p><strong>Category: </strong>{{ contact.category }}</p>
+        {% else %}
+            <p><strong>Category: </strong>Unknow</p>
+        {% endif %}
+        {% if contact.cover %}
+            <div>
+                <img src="{{ contact.cover.url }}" alt="image" class="view_contact-recipe-cover-img">
+            </div>
+        {% endif %}
+        <br><br><a href="{% url 'agenda:update_contact' contact.id %}" class="button-home">Update</a>
+
+        <form action="{% url 'agenda:remove_contact' contact.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="button-home">Remove</button>
+        </form>
+    </div>
 </div>
 {% endblock content %}

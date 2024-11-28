@@ -6,17 +6,35 @@ app_name = 'agenda'
 
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('view_contact/<int:id>/', views.view_contact, name='view_contact'),
+    path('', views.ListViewHome.as_view(), name='home'),
+    path('view_contact/<int:pk>/',
+         views.DetalViewContact.as_view(),
+         name='view_contact'
+         ),
 
-    path('add_contact/', views.add_contact, name='add_contact'),
-    path('add_category/', views.add_category, name='add_category'),
+    path('add_contact/', views.AddUpdateContact.as_view(), name='add_contact'),
+    path('add_category/',
+         views.AddCategoryView.as_view(),
+         name='add_category'
+         ),
 
-    path('remove_contact/<int:id>/', views.remove_contact, name='remove_contact'), # noqa E501
-    path('remove_category/', views.remove_category, name='remove_category'),
+    path('remove_contact/<int:id>/',
+         views.RemoveContactView.as_view(),
+         name='remove_contact'
+         ),
+    path('remove_category/',
+         views.RemoveCategoryView.as_view(),
+         name='remove_category'
+         ),
 
-    path('update_contact/<int:id>/', views.update_contact, name='update_contact'), # noqa E501
-    path('update_category/', views.update_category, name='update_category'),
+    path('update_contact/<int:id>/',
+         views.AddUpdateContact.as_view(),
+         name='update_contact'
+         ),
+    path('update_category/',
+         views.UpdateCategoryView.as_view(),
+         name='update_category'
+         ),
 
-    path('search/', views.search, name='search'),
+    path('search/', views.ListViewSearch.as_view(), name='search'),
 ]
