@@ -1,9 +1,26 @@
 from django.shortcuts import render, redirect
-from authors.form import RegisterForm, LoginForm
-from django.urls import reverse
+from authors.form import RegisterForm
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login
 from django.views import View
+from django.contrib.auth.views import LoginView, LogoutView
+from django.views.generic.edit import FormView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
+
+class AuthorRegisterView(FormView):
+    template_name = 'global/pages/base_page.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('agenda:home')
+
+    def form_valid(self, form):
+        user = form.save()
+
+        login(self.request, user)
+
+        return super().form_valid(form)
 
 
 class RegisterAuthorView(View):
@@ -40,56 +57,29 @@ class RegisterAuthorView(View):
         return self.get_context(form)
 
 
-class LoginAuthorView(View):
-    def get_context(self, form):
-        return render(self.request, 'global/pages/base_page.html', context={
-            'form': form,
+class AuthorLoginView(LoginView):
+    template_name = 'global/pages/base_page.html'
+    success_url = reverse_lazy('agenda:home')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context.update({
             'title': 'Login',
             'msg': 'Login',
-            'url_action': reverse('authors:login_author'),
             'dont_have_account': True,
         })
 
-    def get(self, request):
-        initial_data = {
-            'username': request.GET.get('username', ''),
-        }
+        return context
 
-        form = LoginForm(initial=initial_data)
-
-        return self.get_context(form)
-
-    def post(self, request):
-        form = LoginForm(self.request.POST)
-
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                login(self.request, user)
-                messages.success(
-                    self.request,
-                    'Success! You have been logged in'
-                    )
-
-                return redirect('agenda:home')
-
-            messages.error(
-                self.request,
-                'Username or password is not correct'
-                )
+    def get_success_url(self):
+        return self.success_url
 
 
-class LogoutAuthorView(View):
-    def post(self, request):
-        logout(request)
-
-        messages.success(
-            self.request,
-            'Success! You have been logged out.'
-            )
-
-        return redirect('authors:login_author')
+@method_decorator(
+    login_required(login_url='authors:login_author', redirect_field_name='next'), # noqa E501
+    name='dispatch'
+)
+class AuthorLogoutView(LogoutView):
+    def get_redirect_url(self):
+        return '/'

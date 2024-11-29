@@ -7,15 +7,15 @@ app_name = 'authors'
 
 urlpatterns = [
     path('register_author/',
-         views.RegisterAuthorView.as_view(),
+         views.AuthorRegisterView.as_view(),
          name='register_author'
          ),
     path('login_author/',
-         views.LoginAuthorView.as_view(),
+         views.AuthorLoginView.as_view(),
          name='login_author'
          ),
     path('logout_author/',
-         views.LogoutAuthorView.as_view(),
+         views.AuthorLogoutView.as_view(),
          name='logout_author'
          ),
 ]
