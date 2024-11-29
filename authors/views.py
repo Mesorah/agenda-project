@@ -1,9 +1,6 @@
-from django.shortcuts import render, redirect
 from authors.form import RegisterForm
-from django.urls import reverse, reverse_lazy
-from django.contrib import messages
+from django.urls import reverse_lazy
 from django.contrib.auth import login
-from django.views import View
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
@@ -21,40 +18,6 @@ class AuthorRegisterView(FormView):
         login(self.request, user)
 
         return super().form_valid(form)
-
-
-class RegisterAuthorView(View):
-    def get_context(self, form):
-        return render(self.request, 'global/pages/base_page.html', context={
-            'form': form,
-            'title': 'Register',
-            'msg': 'Register',
-            'url_action': reverse('authors:register_author'),
-            'have_account': True
-        })
-
-    def get(self, request):
-        form = RegisterForm()
-
-        return self.get_context(form)
-
-    def post(self, request):
-        form = RegisterForm(self.request.POST)
-
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            messages.success(
-                self.request,
-                'Success! Your account has been successfully created.'
-                )
-
-            return redirect(
-                reverse('authors:login_author') + f"?username={user.username}"
-                )
-
-        return self.get_context(form)
 
 
 class AuthorLoginView(LoginView):
