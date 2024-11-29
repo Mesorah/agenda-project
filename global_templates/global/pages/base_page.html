@@ -37,10 +37,11 @@
             </div>
 
             <button type="submit" class="contact-button">Send</button>
+
             {% if msg == 'Profile' %}
                 <a href="{% url 'agenda:add_category' %}" class="contact-button">Add New Category</a>
-                <a href="{% url 'agenda:remove_category' %}" class="contact-button">Remove a Category</a>
                 <a href="{% url 'agenda:update_category' %}" class="contact-button">Update a Category</a>
+                <a href="{% url 'agenda:remove_category' %}" class="contact-button">Remove a Category</a>
             {% endif %}
         </form>
 

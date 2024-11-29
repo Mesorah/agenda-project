@@ -1,112 +1,61 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from agenda.form import CategoryForm, RemoveCategoryForm, UpdateCategoryForm
-from django.urls import reverse
-from django.contrib import messages
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.views import View
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from agenda.models import Category
 
 
 @method_decorator(
     login_required(login_url='authors:login_author'),
     name='dispatch'
 )
-class AddCategoryView(View):
-    def get_context(self, form, title, url_action=''):
-        return render(self.request, 'global/pages/base_page.html', context={
-            'form': form,
-            'title': title,
-            'msg': 'Category',
-            'url_action': url_action,
-        })
+class CategoryCreateView(CreateView):
+    template_name = 'global/pages/base_page.html'
+    model = Category
+    form_class = CategoryForm
+    success_url = reverse_lazy('agenda:home')
 
-    def get(self, request):
-        form = CategoryForm()
+    def form_valid(self, form):
+        form.instance.user = self.request.user
 
-        return self.get_context(form,
-                                'Add category',
-                                reverse('agenda:add_category')
-                                )
-
-    def post(self, request):
-        form = CategoryForm(self.request.POST, self.request.FILES)
-
-        if form.is_valid():
-            form.save()
-            messages.success(self.request, 'Category added successfully!')
-            return redirect('agenda:add_contact')
+        return super().form_valid(form)
 
 
 @method_decorator(
     login_required(login_url='authors:login_author'),
     name='dispatch'
 )
-class UpdateCategoryView(View):
-    def get_context(self, form, title, url_action=''):
-        return render(self.request, 'global/pages/base_page.html', context={
-            'form': form,
-            'title': title,
-            'msg': 'Category',
-            'url_action': url_action,
-        })
+class CategoryUpdateView(UpdateView):
+    template_name = 'global/pages/base_page.html'
+    model = Category
+    form_class = UpdateCategoryForm
+    success_url = reverse_lazy('agenda:home')
 
-    def get(self, request):
-        form = UpdateCategoryForm()
+    def get_object(self, queryset=None):
+        return get_object_or_404(Category, user=self.request.user)
 
-        return self.get_context(form,
-                                'Update category',
-                                reverse('agenda:update_category')
-                                )
-
-    def post(self, request):
-        form = UpdateCategoryForm(self.request.POST)
-
-        if form.is_valid():
-            category = form.cleaned_data['category']
-            new_name = form.cleaned_data['new_name']
-            category.name = new_name
-            category.save()
-            messages.success(request, 'Category Successfully Changed!')
-
-            return redirect('agenda:add_contact')
-
-        return self.get_context(form,
-                                'Update category',
-                                reverse('agenda:update_category')
-                                )
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Passa o user para o formulário
+        return kwargs
 
 
 @method_decorator(
     login_required(login_url='authors:login_author'),
     name='dispatch'
 )
-class RemoveCategoryView(View):
-    def get_context(self, form, title, url_action=''):
-        return render(self.request, 'global/pages/base_page.html', context={
-            'form': form,
-            'title': title,
-            'msg': 'Remove category',
-            'url_action': url_action,
-        })
+class CategoryDeleteView(DeleteView):
+    template_name = 'global/pages/base_page.html'
+    model = Category
+    form_class = RemoveCategoryForm
+    success_url = reverse_lazy('agenda:home')
 
-    def get(self, request):
-        form = RemoveCategoryForm()
+    def get_object(self, queryset=None):
+        return get_object_or_404(Category, user=self.request.user)
 
-        return self.get_context(form,
-                                'Remove category',
-                                reverse('agenda:remove_category')
-                                )
-
-    def post(self, request):
-        form = RemoveCategoryForm(self.request.POST)
-
-        if form.is_valid():
-            category = form.cleaned_data['category']
-            category.delete()
-            messages.success(self.request, 'Category successfully removed!')
-            return redirect('agenda:add_contact')
-
-        return self.get_context(form,
-                                'Remove category',
-                                reverse('agenda:remove_category')
-                                )
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
