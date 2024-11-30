@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.http import HttpResponseRedirect
 
 
 class ContactViewSettingsMixin:
@@ -39,7 +40,15 @@ class ContactCreateView(ContactViewSettingsMixin, CreateView):
     name='dispatch'
 )
 class ContactUpdateView(ContactViewSettingsMixin, UpdateView):
-    pass
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context.update({
+            'title': 'Update Contact',
+            'msg': 'Profile',
+        })
+
+        return context
 
 
 @method_decorator(
@@ -48,4 +57,11 @@ class ContactUpdateView(ContactViewSettingsMixin, UpdateView):
 )
 class ContactDeleteView(DeleteView):
     model = Contact
+    template_name = None
     success_url = reverse_lazy('agenda:home')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+
+        return HttpResponseRedirect(self.success_url)

@@ -38,4 +38,4 @@ class TestLoginAuthorUrlsAgenda(TestCase):
 
     def test_login_form_url_load_correct_function(self):
         url = resolve(reverse('authors:login_author'))
-        self.assertIs(url.func, views.login_author)
+        self.assertIs(url.func.view_class, views.AuthorLoginView)

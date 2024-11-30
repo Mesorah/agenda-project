@@ -94,7 +94,7 @@ class TestRemoveContact(CreateModel):
 
     def test_remove_contact(self):
         self.contact = self.create_contact(phone='199884734', email='gabrielcambara124@gmail.com') # noqa E501
-        url = reverse('agenda:remove_contact', kwargs={'id': self.contact.id})
+        url = reverse('agenda:remove_contact', kwargs={'pk': self.contact.pk})
         response = self.client.get(url)
 
         self.assertEqual(Contact.objects.count(), 0)
@@ -116,7 +116,7 @@ class TestUpdateContact(CreateModel):
         return super().setUp()
 
     def test_if_request_in_update_contact_is_post(self):
-        url = reverse('agenda:update_contact', kwargs={'id': self.contact.id})
+        url = reverse('agenda:update_contact', kwargs={'pk': self.contact.pk})
 
         response = self.client.post(url, {
             'first_name': 'Jane',
@@ -140,7 +140,7 @@ class TestUpdateContact(CreateModel):
         self.assertEqual(response.status_code, 200)
 
     def test_if_request_in_update_contact_is_get(self):
-        url = reverse('agenda:update_contact', kwargs={'id': self.contact.id})
+        url = reverse('agenda:update_contact', kwargs={'pk': self.contact.pk})
 
         response = self.client.get(url, {
             'first_name': 'Jane',

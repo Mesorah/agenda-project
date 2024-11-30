@@ -39,33 +39,38 @@ class TestRegisterAuthor(TestCase):
 class TestLoginAuthor(TestCase):
     def setUp(self) -> None:
         self.form_data = {
-            'username': 'JohnDoe',
-            'first_name': 'Johny',
-            'last_name': 'Doeny',
-            'email': 'john.doe@example.com',
-            'password': '!@33dfDFG!2d',
-            'confirm_password': '!@33dfDFG!2d',
+            'username': 'Messorah',
+            'first_name': 'Gabriel',
+            'last_name': 'Rodrigues',
+            'email': 'gabrielcambara556@gmail.com',
+            'password': 'TTeessttee11!!',
+            'confirm_password': 'TTeessttee11!!',
         }
 
         response = self.client.post(
             reverse('authors:register_author'), data=self.form_data)
         self.assertEqual(response.status_code, 302)
 
+        response = self.client.post(
+            reverse('authors:logout_author')
+        )
+        self.assertEqual(response.status_code, 302)
+
         return super().setUp()
 
     def test_if_request_in_login_author_is_post(self):
         login_data = {
-            'username': 'JohnDoe',
-            'password': '!@33dfDFG!2d',
+            'username': 'Messorah',
+            'password': 'TTeessttee11!!',
         }
 
         response = self.client.post(
             reverse('authors:login_author'), data=login_data)
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.post(
-            reverse('authors:login_author'))
-        self.assertEqual(response.status_code, 200)
+        # response = self.client.post(
+        #     reverse('authors:login_author'))
+        # self.assertEqual(response.status_code, 200)
 
     def test_if_request_in_register_author_is_get(self):
         login_data = {

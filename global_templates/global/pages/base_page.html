@@ -15,7 +15,7 @@
         <div class="contact-profile">
             <h2>{{ msg }}</h2>
         </div>
-        <form action="{{ url_action }}" method="POST" enctype='multipart/form-data'>
+        <form action="{% url 'authors:login_author' %}" method="POST" enctype='multipart/form-data'>
             {% csrf_token %}
             <div class="contact-forms">
                 {% for field in form %}
