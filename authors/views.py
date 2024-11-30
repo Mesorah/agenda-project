@@ -1,10 +1,10 @@
 from authors.form import RegisterForm
 from django.urls import reverse_lazy
-from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 
 
 class AuthorRegisterView(FormView):
@@ -12,12 +12,20 @@ class AuthorRegisterView(FormView):
     form_class = RegisterForm
     success_url = reverse_lazy('agenda:home')
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context.update({
+            'title': 'Register',
+            'msg': 'Register',
+        })
+
+        return context
+
     def form_valid(self, form):
-        user = form.save()
+        form.save()
 
-        login(self.request, user)
-
-        return super().form_valid(form)
+        return redirect(self.success_url)
 
 
 class AuthorLoginView(LoginView):

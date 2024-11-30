@@ -13,56 +13,54 @@ password_policy = PasswordPolicy.from_names(
 
 
 class RegisterForm(forms.ModelForm):
-    first_name = forms.CharField(min_length=5, max_length=55)
-    last_name = forms.CharField(min_length=5, max_length=55)
+    first_name = forms.CharField(max_length=55)
+    last_name = forms.CharField(max_length=55)
 
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
-
         fields = ['username', 'first_name', 'last_name', 'email', 'password']
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-
-        user_exists = User.objects.filter(username=username).exists()
-
-        if user_exists:
-            self.add_error('username', 'This username already exists')
-
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError('This username is already taken')
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-
-        email_exists = User.objects.filter(email=email).exists()
-
-        if email_exists:
-            self.add_error('email', 'This email already exists')
-
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('This email is already in use')
         return email
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
-
-        errors = password_policy.test(password)
-        if errors:
-            error_messages = [str(error) for error in errors]
-            self.add_error('password', ' '.join(error_messages))
-
+        if password and len(password) < 8:
+            raise forms.ValidationError(
+                'Password must be at least 8 characters long'
+            )
         return password
 
     def clean(self):
         cleaned_data = super().clean()
-        password = self.cleaned_data.get('password')
-        confirm_password = self.cleaned_data.get('confirm_password')
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
 
         if password != confirm_password:
-            self.add_error('password', 'Passwords need to be the same')
+            raise forms.ValidationError('Passwords must match')
 
         return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+
+        if commit:
+            user.save()
+
+        return user
 
 
 class LoginForm(forms.Form):

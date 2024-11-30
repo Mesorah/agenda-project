@@ -43,17 +43,12 @@ class TestLoginAuthor(TestCase):
             'first_name': 'Gabriel',
             'last_name': 'Rodrigues',
             'email': 'gabrielcambara556@gmail.com',
-            'password': 'TTeessttee11!!',
-            'confirm_password': 'TTeessttee11!!',
+            'password': 'GAbriel11!!',
+            'confirm_password': 'GAbriel11!!',
         }
 
         response = self.client.post(
             reverse('authors:register_author'), data=self.form_data)
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.post(
-            reverse('authors:logout_author')
-        )
         self.assertEqual(response.status_code, 302)
 
         return super().setUp()
@@ -61,16 +56,16 @@ class TestLoginAuthor(TestCase):
     def test_if_request_in_login_author_is_post(self):
         login_data = {
             'username': 'Messorah',
-            'password': 'TTeessttee11!!',
+            'password': 'GAbriel11!!',
         }
 
         response = self.client.post(
             reverse('authors:login_author'), data=login_data)
         self.assertEqual(response.status_code, 302)
 
-        # response = self.client.post(
-        #     reverse('authors:login_author'))
-        # self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            reverse('authors:login_author'))
+        self.assertEqual(response.status_code, 200)
 
     def test_if_request_in_register_author_is_get(self):
         login_data = {

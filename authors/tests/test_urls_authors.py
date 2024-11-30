@@ -19,7 +19,7 @@ class TestRegisterAuthorUrlsAgenda(TestCase):
 
     def test_register_form_url_load_correct_function(self):
         url = resolve(reverse('authors:register_author'))
-        self.assertIs(url.func, views.register_author)
+        self.assertIs(url.func.view_class, views.AuthorRegisterView)
 
 
 class TestLoginAuthorUrlsAgenda(TestCase):

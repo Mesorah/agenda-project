@@ -38,9 +38,10 @@ class TestRegisterForm(TestCase):
         self.assertIn('password', form.errors)
 
         error_message = form.errors['password'][0]
-        self.assertIn('Length(8)', error_message)
-        self.assertIn('Uppercase(2)', error_message)
-        self.assertIn('Special(2)', error_message)
+        self.assertIn(
+            'Password must be at least 8 characters long',
+            error_message
+        )
 
     def test_if_password_is_empty(self):
         self.form_data['password'] = ''
