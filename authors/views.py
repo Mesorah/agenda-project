@@ -2,8 +2,7 @@ from authors.form import RegisterForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 
 
@@ -47,10 +46,8 @@ class AuthorLoginView(LoginView):
         return self.success_url
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author', redirect_field_name='next'), # noqa E501
-    name='dispatch'
-)
-class AuthorLogoutView(LogoutView):
+class AuthorLogoutView(LoginRequiredMixin, LogoutView):
+    login_url = 'authors:login_author'
+
     def get_redirect_url(self):
         return '/'

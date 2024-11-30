@@ -1,16 +1,12 @@
 from agenda.models import Contact
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class ListViewBase(ListView):
+class ListViewBase(LoginRequiredMixin, ListView):
+    login_url = 'authors:login_author'
     template_name = 'agenda/pages/home.html'
     model = Contact
     paginate_by = 2
@@ -37,19 +33,13 @@ class ListViewBase(ListView):
         return context
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class ListViewHome(ListViewBase):
+class ListViewHome(LoginRequiredMixin, ListViewBase):
+    login_url = 'authors:login_author'
     template_name = 'agenda/pages/home.html'
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class ListViewSearch(ListViewBase):
+class ListViewSearch(LoginRequiredMixin, ListViewBase):
+    login_url = 'authors:login_author'
     template_name = 'agenda/pages/home.html'
 
     def get_queryset(self, *args, **kwargs):
@@ -80,11 +70,8 @@ class ListViewSearch(ListViewBase):
         return context
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class DetalViewContact(DetailView):
+class DetalViewContact(LoginRequiredMixin, DetailView):
+    login_url = 'authors:login_author'
     template_name = 'agenda/pages/view_contact.html'
     model = Contact
     context_object_name = 'contact'

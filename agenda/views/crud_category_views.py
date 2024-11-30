@@ -1,17 +1,13 @@
 from django.shortcuts import get_object_or_404
 from agenda.form import CategoryForm, RemoveCategoryForm, UpdateCategoryForm
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from agenda.models import Category
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'authors:login_author'
     template_name = 'global/pages/base_page.html'
     model = Category
     form_class = CategoryForm
@@ -33,11 +29,8 @@ class CategoryCreateView(CreateView):
         return context
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = 'authors:login_author'
     template_name = 'global/pages/base_page.html'
     model = Category
     form_class = UpdateCategoryForm
@@ -62,11 +55,8 @@ class CategoryUpdateView(UpdateView):
         return context
 
 
-@method_decorator(
-    login_required(login_url='authors:login_author'),
-    name='dispatch'
-)
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = 'authors:login_author'
     template_name = 'global/pages/base_page.html'
     model = Category
     form_class = RemoveCategoryForm
