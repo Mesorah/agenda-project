@@ -19,3 +19,15 @@ def contact_api(request):
             serializer.data,
             status=status.HTTP_200_OK
         )
+
+
+@api_view(http_method_names=['GET'])
+def contact_api_detail(request, pk):
+    if request.method == 'GET':
+        contact = Contact.objects.filter(id=pk).first()
+        serializer = ContactSerializer(instance=contact)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
