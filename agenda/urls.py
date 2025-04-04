@@ -58,4 +58,10 @@ urlpatterns = [
           views.contact_api_detail,
           name='contact_api_detail'
           ),
+
+     path(
+          'api/category/<int:pk>/',
+          views.category_api_detail,
+          name='category_api_detail'
+          ),
 ]

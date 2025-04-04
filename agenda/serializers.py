@@ -4,10 +4,27 @@ from rest_framework import serializers
 from agenda.models import Category, Contact
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(
+        queryset=User.objects.all(),
+        slug_field='username',
+    )
+
+    class Meta:
+        model = Category
+        fields = [
+            'id', 'name', 'user'
+        ]
+
+        read_only_fields = [
+            'id'
+        ]
+
+
 class ContactSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
+    category = serializers.HyperlinkedRelatedField(
         queryset=Category.objects.all(),
-        slug_field='name',
+        view_name='agenda:category_api_detail',
     )
 
     user = serializers.SlugRelatedField(
