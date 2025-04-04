@@ -1,8 +1,9 @@
-from agenda.models import Contact
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView, ListView
+
+from agenda.models import Contact
 
 
 class ListViewBase(LoginRequiredMixin, ListView):
@@ -33,12 +34,12 @@ class ListViewBase(LoginRequiredMixin, ListView):
         return context
 
 
-class ListViewHome(LoginRequiredMixin, ListViewBase):
+class ListViewHome(ListViewBase):
     login_url = 'authors:login_author'
     template_name = 'agenda/pages/home.html'
 
 
-class ListViewSearch(LoginRequiredMixin, ListViewBase):
+class ListViewSearch(ListViewBase):
     login_url = 'authors:login_author'
     template_name = 'agenda/pages/home.html'
 
