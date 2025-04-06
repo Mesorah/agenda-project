@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -22,27 +23,51 @@ def contact_api(request):
         )
 
     elif request.method == 'POST':
-        serializer = ContactSerializer(data=request.data)
+        serializer = ContactSerializer(
+            data=request.data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED,
+        )
+
+
+@api_view(http_method_names=['GET', 'PATCH', 'DELETE'])
+def contact_api_detail(request, pk):
+    contact = get_object_or_404(Contact, id=pk)
+
+    if request.method == 'GET':
+        serializer = ContactSerializer(
+            instance=contact,
             context={'request': request}
         )
 
-
-@api_view(http_method_names=['GET'])
-def contact_api_detail(request, pk):
-    if request.method == 'GET':
-        contact = Contact.objects.filter(id=pk).first()
-        serializer = ContactSerializer(instance=contact)
-
         return Response(
             serializer.data,
-            status=status.HTTP_200_OK
+            status=status.HTTP_200_OK,
         )
+
+    elif request.method == 'PATCH':
+        serializer = ContactSerializer(
+            instance=contact,
+            data=request.data,
+            partial=True,
+            context={'request': request}
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+    elif request.method == 'DELETE':
+        contact.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(http_method_names=['GET'])
