@@ -49,19 +49,19 @@ urlpatterns = [
 
      path(
           'api/',
-          views.contact_api,
+          views.ContactAPIView.as_view(),
           name='contact_api'
           ),
 
      path(
           'api/<int:pk>/',
-          views.contact_api_detail,
+          views.ContactAPIDetailView.as_view(),
           name='contact_api_detail'
           ),
 
      path(
           'api/category/<int:pk>/',
-          views.category_api_detail,
+          views.CategoryAPIDetailView.as_view(),
           name='category_api_detail'
           ),
 ]
