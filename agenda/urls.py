@@ -1,8 +1,16 @@
 from django.urls import path
+from rest_framework.routers import SimpleRouter
 
 from agenda import views
 
 app_name = 'agenda'
+
+contact_api_router = SimpleRouter()
+contact_api_router.register(
+    'api',
+    views.ContactAPIViewSet,
+    basename='api'
+)
 
 
 urlpatterns = [
@@ -47,17 +55,17 @@ urlpatterns = [
 
      path('search/', views.ListViewSearch.as_view(), name='search'),
 
-     path(
-          'api/',
-          views.ContactAPIView.as_view(),
-          name='contact_api'
-          ),
+     # path(
+     #      'api/',
+     #      views.ContactAPIViewSet.as_view(),
+     #      name='contact_api'
+     #      ),
 
-     path(
-          'api/<int:pk>/',
-          views.ContactAPIDetailView.as_view(),
-          name='contact_api_detail'
-          ),
+     # path(
+     #      'api/<int:pk>/',
+     #      views.ContactAPIViewSet.as_view(),
+     #      name='contact_api_detail'
+     #      ),
 
      path(
           'api/category/<int:pk>/',
@@ -65,3 +73,5 @@ urlpatterns = [
           name='category_api_detail'
           ),
 ]
+
+urlpatterns += contact_api_router.urls
